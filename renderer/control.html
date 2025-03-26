@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Панель управления</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .control-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; }
+    input[type="number"] { width: 80px; }
+  </style>
+</head>
+<body>
+  <h2>Источник контента</h2>
+  <select id="operator_select"></select> <br>
+  <select id="ad_object_select"></select> <br>
+  <button id="ad_object_button">Назначить</button> <br><br>
+
+  <h2>Управление окном отображения</h2>
+  
+  <div class="control-group">
+    <label>Размер окна:</label>
+    <input type="number" id="width" placeholder="Ширина" value="">
+    <input type="number" id="height" placeholder="Высота" value="">
+    <button id="resize-btn">Изменить размер</button>
+  </div>
+  
+  <div class="control-group">
+    <label>Позиция окна:</label>
+    <input type="number" id="x-position" placeholder="X" value="100">
+    <input type="number" id="y-position" placeholder="Y" value="100">
+    <button id="move-btn">Переместить</button>
+  </div>
+  
+  <div class="control-group">
+    <button id="fullscreen-btn">Полноэкранный режим</button>
+  </div>
+  
+  <div class="control-group">
+    <label>
+      <input type="checkbox" id="always-on-top"> Всегда поверх окон
+    </label>
+  </div>
+  
+  <div class="control-group">
+    <label>Цвет фона:</label>
+    <input type="color" id="background-color" value="#ffffff">
+    <button id="set-color-btn">Установить цвет</button>
+  </div>
+  
+  <div class="control-group">
+    <button id="reload-btn">Перезагрузить окно</button>
+  </div>
+
+  <script src="control.js"></script>
+</body>
+</html>
