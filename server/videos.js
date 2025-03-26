@@ -9,6 +9,10 @@ require('dotenv').config();
 const adObjectIdFilePath = `${appRoot.path}/board_meta/adObjectUuid.txt`;
 const playerContentFolder = process.env.PLAYER_CONTENT_FOLDER || "./player_content";
 
+if (!fs.existsSync(playerContentFolder)) {
+	fs.mkdirSync(playerContentFolder, { recursive: true });
+}
+
 async function downloadContent(fileName) {
 	try {
 		const spacesEndpoint = process.env.SPACE_ENDPOINT;
@@ -43,7 +47,7 @@ async function downloadContent(fileName) {
 					resolve(true);
 				})
 		})
-	} catch(error) {
+	} catch (error) {
 		// @ts-ignore
 		throw Error(error.message);
 	}
@@ -55,9 +59,9 @@ function removeUnnecessaryFiles() {
 	const fileNames = [];
 
 	for (const item of itemsInFolder) {
-		if (fs.lstatSync(`${pathToCheck}/${item}`).isFile()){
+		if (fs.lstatSync(`${pathToCheck}/${item}`).isFile()) {
 			fileNames.push(`${pathToCheck}/${item}`);
-		} else if (fs.lstatSync(`${pathToCheck}/${item}`).isDirectory()){
+		} else if (fs.lstatSync(`${pathToCheck}/${item}`).isDirectory()) {
 			for (const file of fs.readdirSync(`${pathToCheck}/${item}`)) {
 				fileNames.push(`${pathToCheck}/${item}/${file}`);
 			}
@@ -67,7 +71,7 @@ function removeUnnecessaryFiles() {
 	const necessaryFileNames = JSON.parse(fs.readFileSync("./board_meta/playlist.json").toString() || "[]");
 
 	for (const fileName of fileNames) {
-		if (!necessaryFileNames.some((necessaryFileName) => necessaryFileName.includes(fileName.replace(".", "")))){
+		if (!necessaryFileNames.some((necessaryFileName) => necessaryFileName.includes(fileName.replace(".", "")))) {
 			fs.unlink(fileName, (err) => {
 				if (err) {
 					// log
@@ -121,37 +125,37 @@ async function checkCurrentPlaylist({ playlist }) {
 }
 
 const updatePlaylist = async () => {
-    console.log('updatin playlist');
-    let playlist;
-    let adObject;
-    try {
-        const adObjectUuid = fs.readFileSync(adObjectIdFilePath, "utf8");
-        const response = await axios.post(
-            process.env.SERVER_URL + "/get-drum-playlist-by-ad-object-uuid/" + adObjectUuid,
-            { timestamp: new Date().getTime() },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Range": "bytes=0-500000"
-                }
-            }
-        );
+	console.log('updatin playlist');
+	let playlist;
+	let adObject;
+	try {
+		const adObjectUuid = fs.readFileSync(adObjectIdFilePath, "utf8");
+		const response = await axios.post(
+			process.env.SERVER_URL + "/get-drum-playlist-by-ad-object-uuid/" + adObjectUuid,
+			{ timestamp: new Date().getTime() },
+			{
+				headers: {
+					"Content-Type": "application/json",
+					"Range": "bytes=0-500000"
+				}
+			}
+		);
 
-        console.log("received data from citydash server. Sending to player.");
-        playlist = await checkCurrentPlaylist(response.data);
-        adObject = response.data.adObject;
+		console.log("received data from citydash server. Sending to player.");
+		playlist = await checkCurrentPlaylist(response.data);
+		adObject = response.data.adObject;
 
-        fs.writeFileSync(`${appRoot.path}/board_meta/adObject.json`, JSON.stringify(response.data.adObject));
-        fs.writeFileSync(`${appRoot.path}/board_meta/playlist.json`, JSON.stringify(playlist));
+		fs.writeFileSync(`${appRoot.path}/board_meta/adObject.json`, JSON.stringify(response.data.adObject));
+		fs.writeFileSync(`${appRoot.path}/board_meta/playlist.json`, JSON.stringify(playlist));
 		return ({ adObject, playlist });
-    } catch (error) {
-        console.log("couldn't receive data from citydash server. Trying to read from local files");
-        console.log("error", error);
-        playlist = JSON.parse(fs.readFileSync(`${appRoot.path}/board_meta/playlist.json`, "utf8") || "[]");
-        adObject = JSON.parse(fs.readFileSync(`${appRoot.path}/board_meta/adObject.json`, "utf8") || "{}");
+	} catch (error) {
+		console.log("couldn't receive data from citydash server. Trying to read from local files");
+		console.log("error", error);
+		playlist = JSON.parse(fs.readFileSync(`${appRoot.path}/board_meta/playlist.json`, "utf8") || "[]");
+		adObject = JSON.parse(fs.readFileSync(`${appRoot.path}/board_meta/adObject.json`, "utf8") || "{}");
 
-        return({ adObject, playlist });
-    }
+		return ({ adObject, playlist });
+	}
 }
 
 const getPlaylist = async () => {

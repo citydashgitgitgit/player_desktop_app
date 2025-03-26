@@ -8,6 +8,8 @@ let win;
 
 const createPlayerWindow = async () => {
   const adObject = await getLocalAdObject();
+  const playlist = await getPlaylist();
+
   win = new BrowserWindow({
     width: adObject.specs.screen.width,
     height: adObject.specs.screen.height,
@@ -29,7 +31,7 @@ const createPlayerWindow = async () => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        'Content-Security-Policy': ["default-src 'self'; script-src 'self'; connect-src 'self' https://dev.citydash.me/api https://dev.citydash.me"]
+        'Content-Security-Policy': [`default-src 'self'; script-src 'self'; connect-src 'self' ${process.env.SERVER_URL}/api ${process.env.SERVER_URL}`]
       }
     })
   });
@@ -54,11 +56,11 @@ const createControlWindow = async () => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        'Content-Security-Policy': ["connect-src 'self' https://dev.citydash.me/api https://dev.citydash.me"]
+        'Content-Security-Policy': [`connect-src 'self' ${process.env.SERVER_URL}/api ${process.env.SERVER_URL}`]
       }
     })
   });
-  
+
   controlWindow.loadFile('renderer/control.html');
   controlWindow.webContents.openDevTools();
   controlWindow.webContents.on('did-finish-load', () => {
@@ -75,7 +77,7 @@ function setupIpcHandlers() {
   ipcMain.handle('get-playlist', async (event) => {
     return await getPlaylist();
   });
-  
+
   ipcMain.handle('get-local-ad-object', async (event) => {
     return await getLocalAdObject();
   });
@@ -84,23 +86,23 @@ function setupIpcHandlers() {
   ipcMain.on('resize-display-window', (event, width, height) => {
     win.setSize(width, height);
   });
-  
+
   ipcMain.on('move-display-window', (event, x, y) => {
     win.setPosition(x, y);
   });
-  
+
   ipcMain.on('toggle-fullscreen', (event) => {
     win.setFullScreen(!win.isFullScreen());
   });
-  
+
   ipcMain.on('set-always-on-top', (event, flag) => {
     win.setAlwaysOnTop(flag);
   });
-  
+
   ipcMain.on('set-background-color', (event, color) => {
     win.setBackgroundColor(color);
   });
-  
+
   ipcMain.on('reload-display-window', (event) => {
     win.reload();
   });
