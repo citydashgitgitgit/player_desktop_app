@@ -36,6 +36,7 @@ const getAdObject = async () => {
             adObject: data,
         });
         fs.writeFileSync(adObjectFilePath, JSON.stringify(data.adObject));
+        console.log("get-drum-playlist-by-ad-object-uuid result", data);
         return data;
     } catch (error) {
         logger.error({

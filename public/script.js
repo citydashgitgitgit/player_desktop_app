@@ -14,7 +14,7 @@ const main = async () => {
     showStatusMessage("Loading ad object...");
     const adObject = await window.electron.getAdObject();
 
-    const videoElement = initVideo();
+    const videoElement = initVideo(adObject?.adObject);
     showStatusMessage("Loading playlist...");
     let playlist = [];
     try {
@@ -74,15 +74,15 @@ const main = async () => {
     }
 }
 
-const initVideo = () => {
+const initVideo = (adObject) => {
     const videoElement = document.createElement("video");
-    videoElement.style.width = "100%";
-    videoElement.style.height = "100%";
+    videoElement.style.width = adObject ? `${adObject.specs.screen.width}px` : "100%";
+    videoElement.style.height = adObject ? `${adObject.specs.screen.height}px` : "100%";
     videoElement.style.objectFit = "contain";
     videoElement.style.position = "fixed";
     videoElement.style.top = "0";
     videoElement.style.left = "0";
-    videoElement.style.backgroundColor = "#111";
+    videoElement.style.backgroundColor = "#000";
 
     document.body.appendChild(videoElement);
     return videoElement;
