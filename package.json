@@ -14,8 +14,8 @@
   "description": "",
   "devDependencies": {
     "electron": "^35.1.2",
-    "typescript": "^5.8.2",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.8.2"
   },
   "build": {
     "appId": "com.alibi.playerapp",
@@ -25,7 +25,9 @@
       "!node_modules/.cache"
     ],
     "linux": {
-      "target": ["deb"],
+      "target": [
+        "deb"
+      ],
       "category": "Utility"
     },
     "directories": {
@@ -38,6 +40,7 @@
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "pino": "^9.6.0",
+    "systeminformation": "^5.27.3",
     "undici": "^7.6.0",
     "uuid": "^11.1.0"
   }

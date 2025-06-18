@@ -7,6 +7,7 @@ import fs from 'fs';
 
 import { bilboardVerification } from './verification';
 import initClientMethods from './client-methods';
+import { startMetricsCollection } from './system-metrics';
 
 const adObjectUuidFilePath = path.join(__dirname, '../metadata/ad_object_uuid.txt');
 const adObjectFilePath = path.join(__dirname, '../metadata/ad_object.json');
@@ -40,7 +41,7 @@ app.whenReady().then(async () => {
         createVerificationWindow();
     } else {
         initClientMethods();
-
+        startMetricsCollection();
         createWindow();
     }
 

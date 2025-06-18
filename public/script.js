@@ -76,6 +76,7 @@ const main = async () => {
 
 const initVideo = (adObject) => {
     const videoElement = document.createElement("video");
+    videoElement.setAttribute("data-setup", "{}");
     videoElement.style.width = adObject ? `${adObject.specs.screen.width}px` : "100%";
     videoElement.style.height = adObject ? `${adObject.specs.screen.height}px` : "100%";
     videoElement.style.objectFit = "contain";
